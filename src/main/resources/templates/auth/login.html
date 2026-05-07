@@ -18,37 +18,29 @@ xmlns:th="http://www.thymeleaf.org">
         <div class="card-body p-4">
             <h4 class="card-title text-center mb-4">🎓 Đăng nhập hệ thống</h4>
 
-            <!-- Flash message từ register -->
             <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
 
-            <!-- Lỗi login sai -->
             <div th:if="${param.error}" class="alert alert-danger">
                 Tên đăng nhập hoặc mật khẩu không đúng!
             </div>
 
-            <!-- Thông báo đã logout -->
             <div th:if="${param.logout}" class="alert alert-info">
                 Bạn đã đăng xuất thành công.
             </div>
 
-            <!--
-                action="/auth/login" → Spring Security tự xử lý POST này
-                KHÔNG cần viết @PostMapping("/auth/login") trong controller
-            -->
             <form th:action="@{/auth/login}" method="post">
                 <div class="mb-3">
                     <label class="form-label">Tên đăng nhập</label>
                     <input type="text" name="username" class="form-control"
-                           placeholder="Nhập tên đăng nhập" required autofocus>
+                           placeholder="Nhập tên đăng nhập"  autofocus>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Mật khẩu</label>
                     <input type="password" name="password" class="form-control"
-                           placeholder="Nhập mật khẩu" required>
+                           placeholder="Nhập mật khẩu" >
                 </div>
 
-                <!-- CSRF token - Thymeleaf + Spring Security tự thêm -->
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
                 <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
