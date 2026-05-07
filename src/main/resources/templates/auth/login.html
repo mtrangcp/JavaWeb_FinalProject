@@ -28,7 +28,9 @@ xmlns:th="http://www.thymeleaf.org">
                 Bạn đã đăng xuất thành công.
             </div>
 
-            <form th:action="@{/auth/login}" method="post">
+            <form th:action="@{/auth/login}"
+                  th:object="${loginDTO}"
+                  method="post">
                 <div class="mb-3">
                     <label class="form-label">Tên đăng nhập</label>
                     <input type="text" name="username" class="form-control"

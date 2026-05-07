@@ -1,11 +1,22 @@
 package com.btvn.projectfinal.controller;
 
+import com.btvn.projectfinal.model.dto.LoginDTO;
 import com.btvn.projectfinal.model.dto.RegisterDTO;
 import com.btvn.projectfinal.model.entity.User;
 import com.btvn.projectfinal.repository.DepartmentRepository;
 import com.btvn.projectfinal.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;       // ✅ đúng
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;                        // ✅ đúng
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,12 +32,54 @@ import java.util.List;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
+
     private final AuthService authService;
     private final DepartmentRepository departmentRepository;
+    private final AuthenticationManager authenticationManager;
 
     @GetMapping("/login")
-    public String loginPage() {
+    public String loginPage(Model model) {
+        model.addAttribute("loginDTO", new LoginDTO());
         return "auth/login";
+    }
+
+    @PostMapping("/login-validate")
+    public String loginValidate(
+            @Valid @ModelAttribute("loginDTO") LoginDTO dto,
+            BindingResult bindingResult,
+            Model model,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
+        if (bindingResult.hasErrors()) {
+            return "auth/login";
+        }
+
+        try {
+            UsernamePasswordAuthenticationToken token =
+                    new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
+
+            Authentication authentication = authenticationManager.authenticate(token);
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            HttpSession session = request.getSession(true);
+            session.setAttribute(
+                    HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                    SecurityContextHolder.getContext()
+            );
+
+            return "redirect:/dashboard";
+
+        } catch (BadCredentialsException e) {
+            model.addAttribute("errorMessage", "Tên đăng nhập hoặc mật khẩu không đúng!");
+            model.addAttribute("loginDTO", dto);
+            return "auth/login";
+        } catch (DisabledException e) {
+            model.addAttribute("errorMessage", "Tài khoản của bạn đã bị khóa!");
+            model.addAttribute("loginDTO", dto);
+            return "auth/login";
+        }
     }
 
     @GetMapping("/register")
