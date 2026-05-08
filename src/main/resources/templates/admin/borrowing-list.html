@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Quản lý phiếu mượn</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container py-4">
+    <h5>📦 Danh sách phiếu mượn chờ cấp phát</h5>
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}"   class="alert alert-danger"  th:text="${errorMessage}"></div>
+
+    <div th:if="${records.isEmpty()}" class="alert alert-info">
+        Không có phiếu mượn nào đang chờ cấp phát.
+    </div>
+
+    <div th:each="record : ${records}" class="card mb-3 shadow-sm">
+        <div class="card-header">
+            Phiếu mượn #<span th:text="${record.id}"></span>
+            — Sinh viên: <span th:text="${record.session.student.profile.fullName}"></span>
+        </div>
+        <div class="card-body">
+            <table class="table table-sm table-bordered">
+                <thead><tr><th>Thiết bị</th><th>Số lượng</th><th>Đơn vị</th></tr></thead>
+                <tbody>
+                <tr th:each="detail : ${record.details}">
+                    <td th:text="${detail.equipment.name}"></td>
+                    <td th:text="${detail.quantity}"></td>
+                    <td th:text="${detail.equipment.unit}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <form th:action="@{/admin/borrowing/confirm/{id}(id=${record.id})}"
+                  method="post"
+                  onsubmit="return confirm('Xác nhận xuất kho phiếu này?')">
+                <button type="submit" class="btn btn-success btn-sm">✅ Xác nhận xuất kho</button>
+            </form>
+        </div>
+    </div>
+
+    <a th:href="@{/admin/dashboard}" class="btn btn-secondary">← Quay lại</a>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>
