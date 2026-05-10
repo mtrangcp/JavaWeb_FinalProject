@@ -57,9 +57,9 @@
             <div th:if="${h.borrowedEquipments != null and !h.borrowedEquipments.isEmpty()}">
                 <strong>Thiết bị được cấp:</strong>
                 <ul class="mt-1">
-                    <li th:each="eq : ${h.borrowedEquipments}">
-                        <span th:text="${eq.equipmentName}"></span>
-                        — <span th:text="${eq.quantity} + ' ' + ${eq.unit}"></span>
+                    <li th:each="equiment : ${h.borrowedEquipments}">
+                        <span th:text="${equiment.equipmentName}"></span>
+                        — <span th:text="${equiment.quantity} + ' ' + ${equiment.unit}"></span>
                     </li>
                 </ul>
             </div>

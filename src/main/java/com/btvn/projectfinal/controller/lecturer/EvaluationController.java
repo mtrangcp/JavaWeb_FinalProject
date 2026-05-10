@@ -1,6 +1,7 @@
 package com.btvn.projectfinal.controller.lecturer;
 
 import com.btvn.projectfinal.model.dto.EvaluationDTO;
+import com.btvn.projectfinal.model.entity.MentoringSession;
 import com.btvn.projectfinal.repository.EquipmentRepository;
 import com.btvn.projectfinal.service.EvaluationService;
 import jakarta.validation.Valid;
@@ -12,6 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/lecturer/sessions")
 @RequiredArgsConstructor
@@ -22,14 +25,19 @@ public class EvaluationController {
 
     @GetMapping
     public String sessionList(Authentication authentication, Model model) {
-        model.addAttribute("sessions",
-                evaluationService.getPendingSessions(authentication.getName()));
+        List<MentoringSession> sessions = evaluationService.getPendingSessions(authentication.getName());
+        System.out.println("Sessions count: " + sessions.size());
+        sessions.forEach(s -> System.out.println("Session id: " + s.getId()));
+        model.addAttribute("sessions", sessions);
         return "lecturer/sessions";
     }
 
     @GetMapping("/evaluate/{sessionId}")
     public String evaluateForm(@PathVariable Long sessionId, Model model) {
-        model.addAttribute("evaluationDTO", new EvaluationDTO());
+        EvaluationDTO dto = new EvaluationDTO();
+        dto.setSessionId(sessionId);
+
+        model.addAttribute("evaluationDTO", dto);
         model.addAttribute("sessionId", sessionId);
         model.addAttribute("equipments", equipmentRepository.findAll());
         return "lecturer/evaluation-form";

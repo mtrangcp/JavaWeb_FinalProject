@@ -24,7 +24,7 @@
             <form th:action="@{/lecturer/sessions/evaluate}"
                   th:object="${evaluationDTO}" method="post">
 
-                <input type="hidden" th:field="*{sessionId}" th:value="${sessionId}">
+                <input type="hidden" th:field="*{sessionId}">
 
                 <div class="mb-3">
                     <label class="form-label">Điểm đánh giá (1-10) <span class="text-danger">*</span></label>
@@ -51,19 +51,19 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="eq, stat : ${equipments}">
-                            <td th:text="${eq.name}"></td>
-                            <td th:text="${eq.quantity} + ' ' + ${eq.unit}"></td>
+                        <tr th:each="equipment, stat : ${equipments}">
+                            <td th:text="${equipment.name}"></td>
+                            <td th:text="${equipment.quantity} + ' ' + ${equipment.unit}"></td>
                             <td>
                                 <input type="hidden"
                                        th:name="'equipmentIds[' + ${stat.index} + ']'"
-                                       th:value="${eq.id}">
+                                       th:value="${equipment.id}">
 
                                 <input type="number"
                                        th:name="'quantities[' + ${stat.index} + ']'"
                                        class="form-control form-control-sm"
                                        value="0" min="0"
-                                       th:max="${eq.quantity}"
+                                       th:max="${equipment.quantity}"
                                        style="width: 80px">
                             </td>
                         </tr>

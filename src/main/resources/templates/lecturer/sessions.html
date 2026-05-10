@@ -47,15 +47,14 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="session, stat : ${sessions}">
+        <tr th:each="s, stat : ${sessions}">
             <td th:text="${stat.index + 1}"></td>
-            <td th:text="${session.student.profile.fullName}"></td>
-            <td th:text="${#temporals.format(session.scheduledTime, 'dd/MM/yyyy HH:mm')}"></td>
-            <td th:text="${session.note != null ? session.note : '---'}"></td>
+            <td th:text="${s.student.profile.fullName}"></td>
+            <td th:text="${#temporals.format(s.scheduledTime, 'dd/MM/yyyy HH:mm')}"></td>
+            <td th:text="${s.note != null ? s.note : '---'}"></td>
             <td><span class="badge bg-warning text-dark">Chờ xác nhận</span></td>
             <td>
-                <!-- Liên kết đến form đánh giá -->
-                <a th:href="@{/lecturer/sessions/evaluate/{id}(id=${session.id})}"
+                <a th:href="@{/lecturer/sessions/evaluate/{id}(id=${s.id})}"
                    class="btn btn-success btn-sm">
                     ✏️ Đánh giá
                 </a>

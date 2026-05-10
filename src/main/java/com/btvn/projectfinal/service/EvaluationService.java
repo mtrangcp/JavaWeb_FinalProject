@@ -75,7 +75,6 @@ public class EvaluationService {
     }
 
     private Long getLecturerIdByUsername(String username) {
-        // Tìm lecturer qua user
         return lecturerRepository.findByUserUsername(username)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy giảng viên!"))
                 .getId();
