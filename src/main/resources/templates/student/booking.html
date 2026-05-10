@@ -36,7 +36,7 @@
                             </select>
                         </div>
 
-                        <!-- Chọn Giảng viên (load động qua AJAX) -->
+
                         <div class="mb-3">
                             <label class="form-label">Giảng viên <span class="text-danger">*</span></label>
                             <select th:field="*{lecturerId}" class="form-select"
@@ -47,7 +47,7 @@
                             <div class="invalid-feedback" th:errors="*{lecturerId}"></div>
                         </div>
 
-                        <!-- Chọn ngày giờ -->
+
                         <div class="mb-3">
                             <label class="form-label">Ngày & Giờ tư vấn <span class="text-danger">*</span></label>
                             <input type="datetime-local"
@@ -57,7 +57,7 @@
                             <div class="invalid-feedback" th:errors="*{scheduledTime}"></div>
                         </div>
 
-                        <!-- Ghi chú -->
+
                         <div class="mb-3">
                             <label class="form-label">Ghi chú</label>
                             <textarea th:field="*{note}" class="form-control" rows="3"

@@ -56,4 +56,22 @@ public class BookingService {
     public List<Lecturer> getLecturersByDepartment(Long departmentId) {
         return lecturerRepository.findByDepartmentIdWithProfile(departmentId);
     }
+
+    @Transactional
+    public void cancel(Long sessionId, String studentUsername) {
+        MentoringSession session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy lịch tư vấn!"));
+
+        if (!session.getStudent().getUsername().equals(studentUsername)) {
+            throw new IllegalArgumentException("Bạn không có quyền hủy lịch này!");
+        }
+
+        if (session.getStatus() != MentoringSession.SessionStatus.PENDING) {
+            throw new IllegalArgumentException(
+                    "Chỉ có thể hủy lịch đang ở trạng thái chờ xác nhận!");
+        }
+
+        session.setStatus(MentoringSession.SessionStatus.CANCELLED);
+        sessionRepository.save(session);
+    }
 }

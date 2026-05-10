@@ -55,11 +55,10 @@
                             <td th:text="${eq.name}"></td>
                             <td th:text="${eq.quantity} + ' ' + ${eq.unit}"></td>
                             <td>
-                                <!-- Truyền equipmentId -->
                                 <input type="hidden"
                                        th:name="'equipmentIds[' + ${stat.index} + ']'"
                                        th:value="${eq.id}">
-                                <!-- Số lượng muốn cấp -->
+
                                 <input type="number"
                                        th:name="'quantities[' + ${stat.index} + ']'"
                                        class="form-control form-control-sm"

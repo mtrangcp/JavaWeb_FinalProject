@@ -1,10 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Danh sách lịch tư vấn</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
 
+<nav class="navbar navbar-dark bg-success px-3">
+    <span class="navbar-brand">📚 Cổng Giảng viên</span>
+    <div class="d-flex align-items-center gap-3">
+        <form th:action="@{/auth/logout}" method="post" class="mb-0">
+            <button class="btn btn-outline-light btn-sm">Đăng xuất</button>
+        </form>
+    </div>
+</nav>
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5>📋 Danh sách lịch tư vấn chờ xác nhận</h5>
+        <a th:href="@{/lecturer/dashboard}" class="btn btn-secondary btn-sm">← Quay lại</a>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}"   class="alert alert-danger"  th:text="${errorMessage}"></div>
+
+    <div th:if="${sessions.isEmpty()}" class="alert alert-info">
+        Không có lịch tư vấn nào đang chờ xác nhận.
+    </div>
+
+    <table th:if="${!sessions.isEmpty()}" class="table table-bordered table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Sinh viên</th>
+            <th>Ngày & Giờ</th>
+            <th>Ghi chú</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="session, stat : ${sessions}">
+            <td th:text="${stat.index + 1}"></td>
+            <td th:text="${session.student.profile.fullName}"></td>
+            <td th:text="${#temporals.format(session.scheduledTime, 'dd/MM/yyyy HH:mm')}"></td>
+            <td th:text="${session.note != null ? session.note : '---'}"></td>
+            <td><span class="badge bg-warning text-dark">Chờ xác nhận</span></td>
+            <td>
+                <!-- Liên kết đến form đánh giá -->
+                <a th:href="@{/lecturer/sessions/evaluate/{id}(id=${session.id})}"
+                   class="btn btn-success btn-sm">
+                    ✏️ Đánh giá
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 </body>
 </html>

@@ -67,4 +67,21 @@ public class BookingController {
             return "student/booking";
         }
     }
+
+    @PostMapping("/cancel/{id}")
+    public String cancel(
+            @PathVariable Long id,
+            Authentication authentication,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            bookingService.cancel(id, authentication.getName());
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Hủy lịch thành công! Khung giờ đã được giải phóng.");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+
+        return "redirect:/student/history";
+    }
 }

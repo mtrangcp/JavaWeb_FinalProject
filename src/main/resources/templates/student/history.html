@@ -14,28 +14,45 @@
 <body>
 
 <div class="container py-4">
-    <h5>📚 Hồ sơ học thuật của tôi</h5>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5>📚 Hồ sơ học thuật của tôi</h5>
+        <a th:href="@{/student/dashboard}" class="btn btn-secondary btn-sm">← Quay lại</a>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}"   class="alert alert-danger"  th:text="${errorMessage}"></div>
 
     <div th:if="${histories.isEmpty()}" class="alert alert-info">
         Bạn chưa có lịch sử tư vấn nào.
     </div>
 
     <div th:each="h : ${histories}" class="card mb-3 shadow-sm">
-        <div class="card-header d-flex justify-content-between">
-            <span>🗓️ <strong th:text="${#temporals.format(h.scheduledTime, 'dd/MM/yyyy HH:mm')}"></strong></span>
+        <div class="card-header d-flex justify-content-between align-items-center">
             <span>
-                <span th:if="${h.sessionStatus == 'PENDING'}"   class="badge bg-warning">Chờ xác nhận</span>
-                <span th:if="${h.sessionStatus == 'COMPLETED'}" class="badge bg-success">Đã hoàn thành</span>
-                <span th:if="${h.sessionStatus == 'CANCELLED'}" class="badge bg-secondary">Đã hủy</span>
+                🗓️ <strong th:text="${#temporals.format(h.scheduledTime, 'dd/MM/yyyy HH:mm')}"></strong>
+            </span>
+            <span>
+                <span th:if="${h.sessionStatus == 'PENDING'}"
+                      class="badge bg-warning text-dark">Chờ xác nhận</span>
+                <span th:if="${h.sessionStatus == 'COMPLETED'}"
+                      class="badge bg-success">Đã hoàn thành</span>
+                <span th:if="${h.sessionStatus == 'CANCELLED'}"
+                      class="badge bg-secondary">Đã hủy</span>
             </span>
         </div>
         <div class="card-body">
             <p><strong>Giảng viên:</strong> <span th:text="${h.lecturerName}"></span></p>
 
+
             <div th:if="${h.score != null}">
-                <p><strong>Điểm đánh giá:</strong> <span th:text="${h.score} + '/10'"></span></p>
-                <p><strong>Nhận xét:</strong> <span th:text="${h.comment}"></span></p>
+                <p><strong>Điểm đánh giá:</strong>
+                    <span th:text="${h.score} + '/10'"></span>
+                </p>
+                <p><strong>Nhận xét:</strong>
+                    <span th:text="${h.comment}"></span>
+                </p>
             </div>
+
 
             <div th:if="${h.borrowedEquipments != null and !h.borrowedEquipments.isEmpty()}">
                 <strong>Thiết bị được cấp:</strong>
@@ -46,10 +63,19 @@
                     </li>
                 </ul>
             </div>
+
+
+            <div th:if="${h.sessionStatus == 'PENDING'}" class="mt-2">
+                <form th:action="@{/student/booking/cancel/{id}(id=${h.sessionId})}"
+                      method="post"
+                      onsubmit="return confirm('Bạn có chắc muốn hủy lịch này không?')">
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        ❌ Hủy lịch
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
-
-    <a th:href="@{/student/dashboard}" class="btn btn-secondary">← Quay lại</a>
 </div>
 
 <!-- Optional JavaScript -->
