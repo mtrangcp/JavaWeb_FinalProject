@@ -29,7 +29,7 @@ public class EquipmentController {
             @RequestParam(defaultValue = "0") int page,
             Model model) {
 
-        Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
+        Pageable pageable = PageRequest.of(page, 5, Sort.by("createdAt").descending());
         Page<Equipment> equipmentPage = equipmentService.findAll(keyword, pageable);
 
         model.addAttribute("equipmentPage", equipmentPage);

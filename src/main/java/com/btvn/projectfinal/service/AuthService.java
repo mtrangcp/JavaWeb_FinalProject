@@ -1,9 +1,11 @@
 package com.btvn.projectfinal.service;
 
 import com.btvn.projectfinal.model.dto.RegisterDTO;
+import com.btvn.projectfinal.model.entity.Lecturer;
 import com.btvn.projectfinal.model.entity.User;
 import com.btvn.projectfinal.model.entity.UserProfile;
 import com.btvn.projectfinal.repository.DepartmentRepository;
+import com.btvn.projectfinal.repository.LecturerRepository;
 import com.btvn.projectfinal.repository.UserProfileRepository;
 import com.btvn.projectfinal.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class AuthService implements UserDetailsService {
     private final UserRepository userRepository;
     private final UserProfileRepository profileRepository;
     private final DepartmentRepository departmentRepository;
+    private final LecturerRepository lecturerRepository;
     private final PasswordEncoder passwordEncoder;
 
     // spring security check login
@@ -66,5 +69,15 @@ public class AuthService implements UserDetailsService {
         }
 
         profileRepository.save(profile);
+
+        if (dto.getRole() == User.Role.LECTURER) {
+            Lecturer lecturer = new Lecturer();
+            lecturer.setUser(user);
+            if (dto.getDepartmentId() != null) {
+                departmentRepository.findById(dto.getDepartmentId())
+                        .ifPresent(lecturer::setDepartment);
+            }
+            lecturerRepository.save(lecturer);
+        }
     }
 }
