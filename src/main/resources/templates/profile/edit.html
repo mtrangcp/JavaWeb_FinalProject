@@ -23,8 +23,6 @@ xmlns:th="http://www.thymeleaf.org">
                     <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
 
                     <form th:action="@{/profile}" th:object="${profileDTO}" method="post">
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-
                         <div class="mb-3">
                             <label class="form-label">Họ và tên</label>
                             <input type="text" th:field="*{fullName}" class="form-control">

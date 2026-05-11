@@ -23,8 +23,6 @@ xmlns:th="http://www.thymeleaf.org">
                     <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 
                     <form th:action="@{/auth/register}" th:object="${registerDTO}" method="post">
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-
 
                         <div class="mb-3">
                             <label class="form-label">Họ và tên <span class="text-danger">*</span></label>

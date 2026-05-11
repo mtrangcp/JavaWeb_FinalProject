@@ -5,6 +5,7 @@ import com.btvn.projectfinal.model.dto.RegisterDTO;
 import com.btvn.projectfinal.model.entity.User;
 import com.btvn.projectfinal.repository.DepartmentRepository;
 import com.btvn.projectfinal.service.AuthService;
+import com.btvn.projectfinal.service.LoginAttemptService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -36,6 +37,7 @@ public class AuthController {
     private final AuthService authService;
     private final DepartmentRepository departmentRepository;
     private final AuthenticationManager authenticationManager;
+    private final LoginAttemptService loginAttemptService;
 
     @GetMapping("/login")
     public String loginPage(Model model) {
@@ -52,6 +54,13 @@ public class AuthController {
             HttpServletResponse response) {
 
         if (bindingResult.hasErrors()) {
+            return "auth/login";
+        }
+
+        if(loginAttemptService.isBlocked(dto.getUsername())){
+            model.addAttribute("errorMessage",
+                    "Tài khoản tạm thời bị khóa do đăng nhập sai quá 5 lần! Vui lòng thử lại sau.");
+            model.addAttribute("loginDTO", dto);
             return "auth/login";
         }
 
