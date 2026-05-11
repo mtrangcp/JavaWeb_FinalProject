@@ -48,13 +48,14 @@ public class EquipmentService {
 
     @Transactional
     public void delete(Long id) {
-        if (!equipmentRepository.existsById(id)) {
-            throw new NoSuchElementException("Không tìm thấy thiết bị!");
-        }
+        Equipment equipment = equipmentRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy thiết bị!"));
+
 
         if (borrowingDetailRepository.existsByEquipmentId(id)) {
-            throw new IllegalStateException(
-                    "Không thể xóa thiết bị này vì đã có trong phiếu mượn!");
+            equipment.setStatus(Equipment.EquipmentStatus.UNAVAILABLE);
+            equipmentRepository.save(equipment);
+
         }
 
         equipmentRepository.deleteById(id);
