@@ -90,8 +90,12 @@ public class EquipmentController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        equipmentService.delete(id);
-        redirectAttributes.addFlashAttribute("successMessage", "Xóa thiết bị thành công!");
+        try {
+            equipmentService.delete(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Xóa thiết bị thành công!");
+        } catch (IllegalStateException | NoSuchElementException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
         return "redirect:/admin/equipment";
     }
 }

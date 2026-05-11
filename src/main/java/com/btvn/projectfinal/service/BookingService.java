@@ -39,9 +39,22 @@ public class BookingService {
                     "Giảng viên đã có lịch vào khung giờ này! Vui lòng chọn giờ khác.");
         }
 
+        //
         User student = userRepository.findByUsername(studentUsername)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy sinh viên!"));
 
+        boolean studentConflict = sessionRepository
+                .existsByStudentIdAndScheduledTimeAndStatusNot(
+                        student.getId(),
+                        dto.getScheduledTime(),
+                        MentoringSession.SessionStatus.CANCELLED
+                );
+        if (studentConflict) {
+            throw new IllegalArgumentException(
+                    "Bạn đã có lịch tư vấn vào khung giờ này! Vui lòng chọn giờ khác.");
+        }
+
+        //
         MentoringSession session = new MentoringSession();
         session.setStudent(student);
         session.setLecturer(lecturerRepository.findById(dto.getLecturerId())

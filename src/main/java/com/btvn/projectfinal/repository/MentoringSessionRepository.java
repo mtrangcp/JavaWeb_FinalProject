@@ -11,10 +11,14 @@ import java.util.List;
 
 @Repository
 public interface MentoringSessionRepository extends JpaRepository<MentoringSession, Long> {
-
-    // C5: check xung đột giờ của giảng viên
     boolean existsByLecturerIdAndScheduledTimeAndStatusNot(
             Long lecturerId,
+            LocalDateTime scheduledTime,
+            MentoringSession.SessionStatus status
+    );
+
+    boolean existsByStudentIdAndScheduledTimeAndStatusNot(
+            Long studentId,
             LocalDateTime scheduledTime,
             MentoringSession.SessionStatus status
     );
@@ -22,13 +26,12 @@ public interface MentoringSessionRepository extends JpaRepository<MentoringSessi
     // Lấy ds lịch của sv
     List<MentoringSession> findByStudentIdOrderByScheduledTimeDesc(Long studentId);
 
-    // Lấy sd ca PENDING cho giảng viên
     List<MentoringSession> findByLecturerIdAndStatusOrderByScheduledTimeAsc(
             Long lecturerId,
             MentoringSession.SessionStatus status
     );
 
-    // C7: lấy all hồ sơ học tập
+
     @Query("SELECT ms FROM MentoringSession ms " +
             "JOIN FETCH ms.lecturer l " +
             "JOIN FETCH l.user u " +

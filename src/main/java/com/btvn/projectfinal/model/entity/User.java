@@ -24,11 +24,11 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    private String password; // Lưu dạng BCrypt hash
+    private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role; // STUDENT, LECTURER, ADMIN
+    private Role role;
 
     @Column(nullable = false)
     private boolean enabled = true;
@@ -37,7 +37,7 @@ public class User {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    // Quan hệ 1-1 với UserProfile
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserProfile profile;
 

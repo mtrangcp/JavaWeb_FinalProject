@@ -13,7 +13,6 @@ public interface BorrowingRecordRepository extends JpaRepository<BorrowingRecord
 
     Optional<BorrowingRecord> findBySessionId(Long sessionId);
 
-    // C8: ds phiếu PENDING_ISSUE cho admin
     List<BorrowingRecord> findByStatusOrderByCreatedAtAsc(BorrowingRecord.BorrowingStatus status);
 
 

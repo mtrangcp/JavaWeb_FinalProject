@@ -2,6 +2,7 @@ package com.btvn.projectfinal.service;
 
 import com.btvn.projectfinal.model.dto.EquipmentDTO;
 import com.btvn.projectfinal.model.entity.Equipment;
+import com.btvn.projectfinal.repository.BorrowingDetailRepository;
 import com.btvn.projectfinal.repository.EquipmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import java.util.Optional;
 public class EquipmentService {
 
     private final EquipmentRepository equipmentRepository;
+    private final BorrowingDetailRepository borrowingDetailRepository;
 
     public Page<Equipment> findAll(String keyword, Pageable pageable) {
         if (keyword != null && !keyword.isBlank()) {
@@ -49,6 +51,12 @@ public class EquipmentService {
         if (!equipmentRepository.existsById(id)) {
             throw new NoSuchElementException("Không tìm thấy thiết bị!");
         }
+
+        if (borrowingDetailRepository.existsByEquipmentId(id)) {
+            throw new IllegalStateException(
+                    "Không thể xóa thiết bị này vì đã có trong phiếu mượn!");
+        }
+
         equipmentRepository.deleteById(id);
     }
 

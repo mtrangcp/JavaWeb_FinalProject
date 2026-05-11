@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface BorrowingDetailRepository extends JpaRepository<BorrowingDetail, Long> {
     List<BorrowingDetail> findByBorrowingRecordId(Long recordId);
+
+    boolean existsByEquipmentId(Long equipmentId);
 }

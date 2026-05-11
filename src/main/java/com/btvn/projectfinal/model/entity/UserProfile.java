@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserProfile {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,19 +38,17 @@ public class UserProfile {
     private LocalDate dateOfBirth;
 
     @Column(length = 10)
-    private String gender; // MALE, FEMALE, OTHER
+    private String gender;
 
-    // Chỉ dùng cho STUDENT
     @Column(name = "student_id", length = 20)
-    private String studentId; // Mã số sinh viên
+    private String studentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
-    private Department department; // Khoa của sinh viên
+    private Department department;
 
-    // Chỉ dùng cho LECTURER (hoặc dùng bảng lecturers riêng)
     @Column(name = "academic_rank", length = 50)
-    private String academicRank; // GS, PGS, TS, ThS
+    private String academicRank;
 
     @Column(name = "updated_at")
     @UpdateTimestamp
