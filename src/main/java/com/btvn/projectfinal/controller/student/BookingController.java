@@ -54,6 +54,11 @@ public class BookingController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("departments", departmentRepository.findAll());
+
+            if (dto.getDepartmentId() != null) {
+                model.addAttribute("selectedLecturers",
+                        bookingService.getLecturersByDepartment(dto.getDepartmentId()));
+            }
             return "student/booking";
         }
 

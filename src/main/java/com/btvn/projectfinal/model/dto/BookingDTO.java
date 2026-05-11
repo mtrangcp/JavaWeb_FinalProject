@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class BookingDTO {
+    private Long departmentId;
 
     @NotNull(message = "Vui lòng chọn giảng viên")
     private Long lecturerId;

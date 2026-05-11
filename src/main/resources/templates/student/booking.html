@@ -24,10 +24,11 @@
 
                     <form th:action="@{/student/booking}" th:object="${bookingDTO}" method="post">
 
-                        <!-- Chọn Khoa -->
                         <div class="mb-3">
                             <label class="form-label">Khoa/Ngành <span class="text-danger">*</span></label>
-                            <select class="form-select" id="departmentSelect" onchange="loadLecturers(this.value)">
+                            <select class="form-select" id="departmentSelect"
+                                    th:field="*{departmentId}"
+                                    onchange="loadLecturers(this.value)">
                                 <option value="">-- Chọn Khoa/Ngành --</option>
                                 <option th:each="dept : ${departments}"
                                         th:value="${dept.id}"
@@ -43,6 +44,10 @@
                                     th:classappend="${#fields.hasErrors('lecturerId')} ? 'is-invalid'"
                                     id="lecturerSelect">
                                 <option value="">-- Chọn giảng viên --</option>
+                                <option th:each="lec : ${selectedLecturers}"
+                                        th:value="${lec.id}"
+                                        th:text="${lec.fullName}">
+                                </option>
                             </select>
                             <div class="invalid-feedback" th:errors="*{lecturerId}"></div>
                         </div>
@@ -75,25 +80,47 @@
 </div>
 
 <script>
-    // Load giảng viên theo khoa bằng AJAX
     function loadLecturers(departmentId) {
         const select = document.getElementById('lecturerSelect');
-        select.innerHTML = '<option value="">-- Đang tải... --</option>';
 
         if (!departmentId) {
             select.innerHTML = '<option value="">-- Chọn giảng viên --</option>';
             return;
         }
 
+        select.innerHTML = '<option value="">-- Đang tải... --</option>';
+
         fetch('/student/booking/lecturers?departmentId=' + departmentId)
             .then(res => res.json())
             .then(data => {
+                const selectedId = select.dataset.selected;
+
                 select.innerHTML = '<option value="">-- Chọn giảng viên --</option>';
                 data.forEach(lecturer => {
-                    select.innerHTML += `<option value="${lecturer.id}">${lecturer.name}</option>`;
+                    const option = document.createElement('option');
+                    option.value = lecturer.id;
+                    option.textContent = lecturer.name;
+
+                    if (String(lecturer.id) === String(selectedId)) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
                 });
             });
     }
+
+    window.onload = function () {
+        const deptSelect = document.querySelector('select[name="departmentId"]');
+        const lecturerSelect = document.getElementById('lecturerSelect');
+
+        if (lecturerSelect) {
+            lecturerSelect.dataset.selected = lecturerSelect.value;
+        }
+
+        if (deptSelect && deptSelect.value) {
+            loadLecturers(deptSelect.value);
+        }
+    };
 </script>
 
 <!-- Optional JavaScript -->
