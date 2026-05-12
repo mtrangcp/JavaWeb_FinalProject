@@ -1,6 +1,7 @@
 package com.btvn.projectfinal.controller.lecturer;
 
 import com.btvn.projectfinal.model.dto.EvaluationDTO;
+import com.btvn.projectfinal.model.entity.Equipment;
 import com.btvn.projectfinal.model.entity.MentoringSession;
 import com.btvn.projectfinal.repository.EquipmentRepository;
 import com.btvn.projectfinal.service.EvaluationService;
@@ -39,7 +40,7 @@ public class EvaluationController {
 
         model.addAttribute("evaluationDTO", dto);
         model.addAttribute("sessionId", sessionId);
-        model.addAttribute("equipments", equipmentRepository.findAll());
+        model.addAttribute("equipments", equipmentRepository.findByStatus(Equipment.EquipmentStatus.AVAILABLE));
         return "lecturer/evaluation-form";
     }
 

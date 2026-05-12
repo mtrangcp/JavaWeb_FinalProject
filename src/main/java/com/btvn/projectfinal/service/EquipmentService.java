@@ -47,18 +47,18 @@ public class EquipmentService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         Equipment equipment = equipmentRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Không tìm thấy thiết bị!"));
-
 
         if (borrowingDetailRepository.existsByEquipmentId(id)) {
             equipment.setStatus(Equipment.EquipmentStatus.UNAVAILABLE);
             equipmentRepository.save(equipment);
-
+            return false;
         }
 
         equipmentRepository.deleteById(id);
+        return true;
     }
 
     private void mapDtoToEntity(EquipmentDTO dto, Equipment entity) {

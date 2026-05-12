@@ -91,9 +91,15 @@ public class EquipmentController {
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
-            equipmentService.delete(id);
-            redirectAttributes.addFlashAttribute("successMessage", "Xóa thiết bị thành công!");
-        } catch (IllegalStateException | NoSuchElementException e) {
+            boolean deleted = equipmentService.delete(id);
+            if (deleted) {
+                redirectAttributes.addFlashAttribute("successMessage",
+                        "Xóa thiết bị thành công!");
+            } else {
+                redirectAttributes.addFlashAttribute("errorMessage",
+                        "Thiết bị đã có trong phiếu mượn, đã chuyển sang 'Ngừng cung cấp'!");
+            }
+        } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
         return "redirect:/admin/equipment";

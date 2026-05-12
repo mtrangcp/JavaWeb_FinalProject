@@ -70,11 +70,11 @@ xmlns:th="http://www.thymeleaf.org">
                             <div class="invalid-feedback" th:errors="*{role}"></div>
                         </div>
 
-                        <!-- Phần chỉ hiện khi chọn STUDENT -->
+                        <!--  -->
                         <div id="studentFields" style="display: none">
-                            <div class="mb-3">
+                            <div id="studentIdField" class="mb-3">
                                 <label class="form-label">Mã số sinh viên</label>
-                                <div id="studentIdField">
+                                <div >
                                     <input type="text" th:field="*{studentId}" class="form-control"
                                            placeholder="VD: 21110001">
                                 </div>
@@ -107,23 +107,26 @@ xmlns:th="http://www.thymeleaf.org">
 
 <script>
     function toggleStudentFields(role) {
-        const fields = document.getElementById('studentFields');
+        const studentFields = document.getElementById('studentFields');
         const studentIdField = document.getElementById('studentIdField');
 
         if (role === 'STUDENT') {
-            fields.style.display = 'block';
+            studentFields.style.display = 'block';
             studentIdField.style.display = 'block';
         } else if (role === 'LECTURER') {
-            fields.style.display = 'block';
+            studentFields.style.display = 'block';
             studentIdField.style.display = 'none';
         } else {
-            fields.style.display = 'none';
+            studentFields.style.display = 'none';
+            studentIdField.style.display = 'none';
         }
     }
 
     window.onload = function () {
         const roleSelect = document.querySelector('select[name="role"]');
-        if (roleSelect) toggleStudentFields(roleSelect.value);
+        if (roleSelect && roleSelect.value) {
+            toggleStudentFields(roleSelect.value);
+        }
     };
 </script>
 
